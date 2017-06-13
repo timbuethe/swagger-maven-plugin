@@ -5,24 +5,15 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.converter.ModelConverters;
 import io.swagger.jaxrs.ext.AbstractSwaggerExtension;
 import io.swagger.jaxrs.ext.SwaggerExtension;
-import io.swagger.models.parameters.CookieParameter;
-import io.swagger.models.parameters.FormParameter;
-import io.swagger.models.parameters.HeaderParameter;
-import io.swagger.models.parameters.Parameter;
-import io.swagger.models.parameters.PathParameter;
-import io.swagger.models.parameters.QueryParameter;
+import io.swagger.models.RefModel;
+import io.swagger.models.parameters.*;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.FileProperty;
 import io.swagger.models.properties.Property;
 import org.apache.commons.lang3.reflect.TypeUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.beans.PropertyDescriptor;
@@ -141,6 +132,14 @@ public class SpringSwaggerExtension extends AbstractSwaggerExtension {
             }
 
             parameter = formParameter;
+        } else if (annotation instanceof RequestBody) {
+
+            RefModel model = new RefModel();
+            model.set$ref(((Class) type).getSimpleName());
+
+            BodyParameter bodyParameter = new BodyParameter();
+            bodyParameter.setSchema(model);
+            parameter = bodyParameter;
         }
 
         return parameter;

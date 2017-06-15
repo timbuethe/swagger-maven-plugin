@@ -294,6 +294,11 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
             List<Parameter> parameters = getParameters(type, annotations);
 
             for (Parameter parameter : parameters) {
+
+                for (Map.Entry<String, Model> entry : ModelConverters.getInstance().readAll(type).entrySet()) {
+                    swagger.model(entry.getKey(), entry.getValue());
+                }
+
                 operation.parameter(parameter);
             }
         }

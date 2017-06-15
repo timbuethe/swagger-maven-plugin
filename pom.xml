@@ -16,7 +16,7 @@
     <description>
         A maven build plugin which helps you generate API document during build phase
     </description>
-    <url>https://github.com/kongchen/swagger-maven-plugin</url>
+    <url>https://github.com/timbuethe/swagger-maven-plugin</url>
     <licenses>
         <license>
             <name>Apache license</name>
@@ -25,9 +25,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git@github.com:kongchen/swagger-maven-plugin.git</connection>
-        <url>scm:git:git@github.com:kongchen/swagger-maven-plugin.git</url>
-        <developerConnection>scm:git:git@github.com:kongchen/swagger-maven-plugin.git</developerConnection>
+        <connection>scm:git:git@github.com:timbuethe/swagger-maven-plugin.git</connection>
+        <url>scm:git:git@github.com:timbuethe/swagger-maven-plugin.git</url>
+        <developerConnection>scm:git:git@github.com:timbuethe/swagger-maven-plugin.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
@@ -45,6 +45,10 @@
         <developer>
             <id>who</id>
             <name>Andrew B</name>
+        </developer>
+        <developer>
+            <id>timbuethe</id>
+            <name>Tim Büthe</name>
         </developer>
     </developers>
 

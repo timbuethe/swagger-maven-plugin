@@ -8,9 +8,9 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.github.kongchen</groupId>
+    <groupId>com.github.timbuethe</groupId>
     <artifactId>swagger-maven-plugin</artifactId>
-    <version>3.1.5-SNAPSHOT</version>
+    <version>3.1.5-custom-1</version>
     <packaging>maven-plugin</packaging>
     <name>Swagger Maven Plugin</name>
     <description>
@@ -51,7 +51,7 @@
     <properties>
         <maven.version>2.2.1</maven.version>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <java.version>1.6</java.version>
+        <java.version>1.8</java.version>
         <swagger.version>1.5.13</swagger.version>
         <github.global.server>github</github.global.server>
         <jackson.version>2.8.4</jackson.version>
@@ -263,27 +263,6 @@
                         <id>help-goal</id>
                         <goals>
                             <goal>helpmojo</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>animal-sniffer-maven-plugin</artifactId>
-                <version>1.14</version>
-                <configuration>
-                    <signature>
-                        <groupId>org.codehaus.mojo.signature</groupId>
-                        <artifactId>java16-sun</artifactId>
-                        <version>1.0</version>
-                    </signature>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>check-java16-sun</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>

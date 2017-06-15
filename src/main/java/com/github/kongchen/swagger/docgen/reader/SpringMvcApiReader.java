@@ -3,18 +3,9 @@ package com.github.kongchen.swagger.docgen.reader;
 import com.github.kongchen.swagger.docgen.GenerateException;
 import com.github.kongchen.swagger.docgen.spring.SpringResource;
 import com.github.kongchen.swagger.docgen.util.SpringUtils;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
-import io.swagger.annotations.AuthorizationScope;
+import io.swagger.annotations.*;
 import io.swagger.converter.ModelConverters;
-import io.swagger.models.Model;
-import io.swagger.models.Operation;
-import io.swagger.models.Response;
-import io.swagger.models.SecurityRequirement;
-import io.swagger.models.Swagger;
+import io.swagger.models.*;
 import io.swagger.models.Tag;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.Property;
@@ -153,10 +144,10 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
         }
 
         Map<String, Property> defaultResponseHeaders = apiOperation == null
-                ? Collections.<String, Property>emptyMap()
+                ? Collections.emptyMap()
                 : parseResponseHeaders(apiOperation.responseHeaders());
 
-        if(apiOperation != null) {
+        if (apiOperation != null) {
 
             operation.summary(apiOperation.value()).description(apiOperation.notes());
 
@@ -185,7 +176,7 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
 
         ///security
         List<SecurityRequirement> securities = new ArrayList<SecurityRequirement>();
-        Authorization[] authorizations = apiOperation == null ? new  Authorization[0] : apiOperation.authorizations();
+        Authorization[] authorizations = apiOperation == null ? new Authorization[0] : apiOperation.authorizations();
         for (Authorization auth : authorizations) {
             if (!auth.value().isEmpty()) {
                 SecurityRequirement security = new SecurityRequirement();
@@ -286,6 +277,9 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
         Class[] parameterTypes = method.getParameterTypes();
         Type[] genericParameterTypes = method.getGenericParameterTypes();
         Annotation[][] paramAnnotations = method.getParameterAnnotations();
+        java.lang.reflect.Parameter[] methodParameters = method.getParameters();
+
+
         // paramTypes = method.getParameterTypes
         // genericParamTypes = method.getGenericParameterTypes
         for (int i = 0; i < parameterTypes.length; i++) {
@@ -297,6 +291,16 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
 
                 for (Map.Entry<String, Model> entry : ModelConverters.getInstance().readAll(type).entrySet()) {
                     swagger.model(entry.getKey(), entry.getValue());
+                }
+
+                // if sources were compiled java 8 and compiler flag `-parameters` parameter names can be read using reflection
+                if (StringUtils.isBlank(parameter.getName())) {
+
+                    int index = parameters.indexOf(parameter);
+                    String parameterName = methodParameters[index].getName();
+
+                    LOG.debug("parameter name is empty, set name '" + parameterName + "' from java reflection (" + parameter + ")");
+                    parameter.setName(parameterName);
                 }
 
                 operation.parameter(parameter);
@@ -367,7 +371,7 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
 
     //Helper method for loadDocuments()
     private Map<String, SpringResource> analyzeController(Class<?> controllerClazz, Map<String, SpringResource> resourceMap, String description) {
-	String[] controllerRequestMappingValues = SpringUtils.getControllerResquestMapping(controllerClazz);
+        String[] controllerRequestMappingValues = SpringUtils.getControllerResquestMapping(controllerClazz);
 
         // Iterate over all value attributes of the class-level RequestMapping annotation
         for (String controllerRequestMappingValue : controllerRequestMappingValues) {

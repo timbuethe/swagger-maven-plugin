@@ -296,8 +296,7 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
                 // if sources were compiled java 8 and compiler flag `-parameters` parameter names can be read using reflection
                 if (StringUtils.isBlank(parameter.getName())) {
 
-                    int index = parameters.indexOf(parameter);
-                    String parameterName = methodParameters[index].getName();
+                    String parameterName = methodParameters[i].getName();
 
                     LOG.debug("parameter name is empty, set name '" + parameterName + "' from java reflection (" + parameter + ")");
                     parameter.setName(parameterName);

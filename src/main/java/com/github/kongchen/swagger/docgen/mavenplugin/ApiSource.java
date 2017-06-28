@@ -66,7 +66,7 @@ public class ApiSource {
 
     @Parameter
     private String swaggerDirectory;
-    
+
     @Parameter
     private String swaggerFileName;
 
@@ -101,10 +101,10 @@ public class ApiSource {
 
     @Parameter
     private boolean useJAXBAnnotationProcessor;
-    
+
     @Parameter
     private boolean useJAXBAnnotationProcessorAsPrimary = true;
-    
+
     @Parameter
     private String swaggerSchemaConverter;
 
@@ -125,6 +125,9 @@ public class ApiSource {
 
     @Parameter
     private List<String> modelConverters;
+
+    @Parameter
+    private String defaultTags;
 
     public Set<Class<?>> getValidClasses(Class<? extends Annotation> clazz) {
         Set<Class<?>> classes = new LinkedHashSet<Class<?>>();
@@ -275,7 +278,7 @@ public class ApiSource {
     public void setSwaggerDirectory(String swaggerDirectory) {
         this.swaggerDirectory = swaggerDirectory;
     }
-    
+
     public String getSwaggerFileName() {
         return swaggerFileName;
     }
@@ -405,6 +408,14 @@ public class ApiSource {
 
     public void setModelConverters(List<String> modelConverters) {
         this.modelConverters = modelConverters;
+    }
+
+    public String getDefaultTags() {
+        return defaultTags;
+    }
+
+    public void setDefaultTags(String defaultTags) {
+        this.defaultTags = defaultTags;
     }
 }
 

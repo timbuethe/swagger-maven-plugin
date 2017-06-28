@@ -4,12 +4,14 @@ import com.github.kongchen.swagger.docgen.AbstractDocumentSource;
 import com.github.kongchen.swagger.docgen.GenerateException;
 import com.github.kongchen.swagger.docgen.reader.ClassSwaggerReader;
 import com.github.kongchen.swagger.docgen.reader.SpringMvcApiReader;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Sets;
 import io.swagger.annotations.Api;
 import io.swagger.config.FilterFactory;
 import io.swagger.core.filter.SpecFilter;
 import io.swagger.core.filter.SwaggerSpecFilter;
 import io.swagger.models.auth.SecuritySchemeDefinition;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.springframework.web.bind.annotation.RestController;
@@ -81,6 +83,13 @@ public class SpringMavenDocumentSource extends AbstractDocumentSource {
         if (customReaderClassName == null) {
             SpringMvcApiReader reader = new SpringMvcApiReader(swagger, LOG);
             reader.setTypesToSkip(this.typesToSkip);
+
+            String defaultTagsString = apiSource.getDefaultTags();
+            if (StringUtils.isNoneBlank(defaultTagsString)) {
+                List<String> defaultTags = Splitter.on(",").trimResults().splitToList(defaultTagsString);
+                reader.setDefaultTags(defaultTags);
+            }
+
             return reader;
         } else {
             return getCustomApiReader(customReaderClassName);

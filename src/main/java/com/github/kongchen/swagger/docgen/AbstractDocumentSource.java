@@ -136,7 +136,7 @@ public abstract class AbstractDocumentSource {
                         switch (output) {
                             case json:
                                 ObjectWriter jsonWriter = mapper.writer(new DefaultPrettyPrinter());
-                                LOG.info(jsonWriter.writeValueAsString(swagger));
+                                LOG.debug(jsonWriter.writeValueAsString(swagger));
                                 FileUtils.write(new File(dir, fileName + ".json"), jsonWriter.writeValueAsString(swagger), encoding);
                                 break;
                             case yaml:
@@ -162,12 +162,12 @@ public abstract class AbstractDocumentSource {
         if (apiSource.isUseJAXBAnnotationProcessor()) {
             JaxbAnnotationModule jaxbAnnotationModule = new JaxbAnnotationModule();
             if (apiSource.isUseJAXBAnnotationProcessorAsPrimary()) {
-                jaxbAnnotationModule.setPriority(Priority.PRIMARY);    
+                jaxbAnnotationModule.setPriority(Priority.PRIMARY);
             } else {
                 jaxbAnnotationModule.setPriority(Priority.SECONDARY);
             }
             objectMapper.registerModule(jaxbAnnotationModule);
-            
+
             // to support @ApiModel on class level.
             // must be registered only if we use JaxbAnnotationModule before. Why?
             objectMapper.registerModule(new EnhancedSwaggerModule());

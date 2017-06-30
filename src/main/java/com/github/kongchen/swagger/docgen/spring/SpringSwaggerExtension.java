@@ -152,6 +152,7 @@ public class SpringSwaggerExtension extends AbstractSwaggerExtension {
 
             BodyParameter bodyParameter = new BodyParameter();
             bodyParameter.setSchema(model);
+            bodyParameter.setRequired(((RequestBody) annotation).required());
             parameter = bodyParameter;
         }
 

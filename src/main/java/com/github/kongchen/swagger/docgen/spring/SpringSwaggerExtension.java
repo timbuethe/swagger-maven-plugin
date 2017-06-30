@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -135,7 +136,19 @@ public class SpringSwaggerExtension extends AbstractSwaggerExtension {
         } else if (annotation instanceof RequestBody) {
 
             RefModel model = new RefModel();
-            model.set$ref(((Class) type).getSimpleName());
+
+            if (type instanceof ParameterizedType) {
+
+                ParameterizedType parameterizedType = (ParameterizedType) type;
+                Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+                Class clazz = (Class) actualTypeArguments[0]; // TODO handle multiple types?
+                model.set$ref(clazz.getSimpleName());
+
+            } else {
+
+                Class clazz = (Class) type;
+                model.set$ref(clazz.getSimpleName());
+            }
 
             BodyParameter bodyParameter = new BodyParameter();
             bodyParameter.setSchema(model);

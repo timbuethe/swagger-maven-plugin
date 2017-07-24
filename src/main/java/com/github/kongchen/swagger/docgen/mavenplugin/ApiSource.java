@@ -65,7 +65,7 @@ public class ApiSource {
     private String outputFormats;
 
     @Parameter
-    private String swaggerDirectory;
+    private List<String> swaggerDirectory;
 
     @Parameter
     private String swaggerFileName;
@@ -271,11 +271,11 @@ public class ApiSource {
         this.basePath = basePath;
     }
 
-    public String getSwaggerDirectory() {
+    public List<String> getSwaggerDirectory() {
         return swaggerDirectory;
     }
 
-    public void setSwaggerDirectory(String swaggerDirectory) {
+    public void setSwaggerDirectory(List<String> swaggerDirectory) {
         this.swaggerDirectory = swaggerDirectory;
     }
 

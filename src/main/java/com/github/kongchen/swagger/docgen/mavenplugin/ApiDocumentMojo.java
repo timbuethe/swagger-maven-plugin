@@ -46,7 +46,7 @@ public class ApiDocumentMojo extends AbstractMojo {
      */
     @Parameter(defaultValue = "false")
     private boolean skipSwaggerGeneration;
-    
+
     @Parameter(property="file.encoding")
     private String encoding;
 
@@ -119,9 +119,9 @@ public class ApiDocumentMojo extends AbstractMojo {
                     if (outputFormats != null) {
                         for (String format : outputFormats.split(",")) {
                             String classifier = swaggerFileName.equals("swagger")
-                                    ? getSwaggerDirectoryName(apiSource.getSwaggerDirectory())
+                                    ? getSwaggerDirectoryName(apiSource.getSwaggerDirectory().get(0))
                                     : swaggerFileName;
-                            File swaggerFile = new File(apiSource.getSwaggerDirectory(), swaggerFileName + "." + format.toLowerCase());
+                            File swaggerFile = new File(apiSource.getSwaggerDirectory().get(0), swaggerFileName + "." + format.toLowerCase());
                             projectHelper.attachArtifact(project, format.toLowerCase(), classifier, swaggerFile);
                         }
                     }
@@ -181,7 +181,7 @@ public class ApiDocumentMojo extends AbstractMojo {
             return false;
         }
     }
-    
+
     private String getSwaggerFileName(String swaggerFileName) {
         return swaggerFileName == null || "".equals(swaggerFileName.trim()) ? "swagger" : swaggerFileName;
     }

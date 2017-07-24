@@ -18,7 +18,7 @@ public class SpringMavenDocumentSourceTest
 
         ApiSource apiSource = new ApiSource();
         apiSource.setLocations(Collections.singletonList(this.getClass().getPackage().getName()));
-        apiSource.setSwaggerDirectory("./");
+        apiSource.setSwaggerDirectory(Collections.singletonList("./"));
 
         SpringMavenDocumentSource springMavenDocumentSource = new SpringMavenDocumentSource(apiSource, log, "UTF-8");
 

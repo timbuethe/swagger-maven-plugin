@@ -404,12 +404,15 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
                             for (String methodRequestMappingValue : methodRequestMappingValues) {
                                 String resourceKey = controllerClazz.getCanonicalName() + controllerRequestMappingValue
                                         + methodRequestMappingValue + requestMappingRequestMethod;
-                                if (!methodRequestMappingValue.isEmpty()) {
+
+                                // comment out, to recognize methods that have a path set at a class level, but none on method level.
+                                // See com.github.kongchen.swagger.docgen.reader.SpringMvcApiReaderTest.testReadWithEmptyPathOnMethodLevel()
+                                //  if (!methodRequestMappingValue.isEmpty()) {
                                     if (!resourceMap.containsKey(resourceKey)) {
                                         resourceMap.put(resourceKey, new SpringResource(controllerClazz, methodRequestMappingValue, resourceKey, description));
                                     }
                                     resourceMap.get(resourceKey).addMethod(method);
-                                }
+                                // }
                             }
                         }
                     }

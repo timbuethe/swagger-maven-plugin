@@ -1,5 +1,6 @@
 package com.github.kongchen.swagger.docgen.reader;
 
+import io.swagger.annotations.ApiOperation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import org.apache.maven.plugin.logging.Log;
@@ -17,10 +18,10 @@ import static java.util.Collections.singletonList;
 
 public class SpringMvcApiReaderTest {
 
+    private final Log log = new SystemStreamLog();
+
     @Test
     public void testReadWithEmptyPathOnMethodLevel() throws Exception {
-
-        Log log = new SystemStreamLog();
 
         SpringMvcApiReader springMvcApiReader = new SpringMvcApiReader(null, log);
         Swagger swagger = springMvcApiReader.read(new HashSet<>(singletonList(ExampleController.class)));
@@ -35,6 +36,17 @@ public class SpringMvcApiReaderTest {
     }
 
 
+    @Test
+    public void testApiOperationNickname() throws Exception {
+
+        SpringMvcApiReader springMvcApiReader = new SpringMvcApiReader(null, log);
+        Swagger swagger = springMvcApiReader.read(new HashSet<>(singletonList(ExampleController.class)));
+
+        Path path = swagger.getPaths().get("/api/endpoint-with-nickname");
+        Assert.assertEquals(path.getGet().getOperationId(), "nicknamed");
+    }
+
+
     @RestController
     @RequestMapping("/api")
     static class ExampleController {
@@ -46,6 +58,12 @@ public class SpringMvcApiReaderTest {
 
         @GetMapping("")
         public void emptyPathEndpoint() {
+
+        }
+
+        @GetMapping("endpoint-with-nickname")
+        @ApiOperation(nickname = "nicknamed", value = "")
+        public void endpointWithNickname() {
 
         }
     }

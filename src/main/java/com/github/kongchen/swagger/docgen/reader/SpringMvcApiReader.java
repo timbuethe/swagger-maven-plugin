@@ -8,6 +8,7 @@ import io.swagger.converter.ModelConverters;
 import io.swagger.models.*;
 import io.swagger.models.Tag;
 import io.swagger.models.parameters.Parameter;
+import io.swagger.models.properties.FileProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import org.apache.maven.plugin.logging.Log;
@@ -212,7 +213,16 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
 
             int code = apiOperation == null ? 200 : apiOperation.code();
 
-            if (isPrimitive(responseClass)) {
+            // file download
+            if (responseClass == byte[].class) {
+                operation.response(code, new Response()
+                        .description("successful operation")
+                        .schema(new FileProperty())
+                        .headers(defaultResponseHeaders));
+
+            }
+
+            else if (isPrimitive(responseClass)) {
                 Property property = ModelConverters.getInstance().readAsProperty(responseClass);
                 if (property != null) {
                     Property responseProperty = RESPONSE_CONTAINER_CONVERTER.withResponseContainer(responseContainer, property);

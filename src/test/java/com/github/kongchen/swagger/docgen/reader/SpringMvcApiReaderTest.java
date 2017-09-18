@@ -2,6 +2,7 @@ package com.github.kongchen.swagger.docgen.reader;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.Path;
+import io.swagger.models.Response;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.Parameter;
 import org.apache.maven.plugin.logging.Log;
@@ -68,6 +69,18 @@ public class SpringMvcApiReaderTest {
         Assert.assertEquals(parameter.getName(), "file");
     }
 
+    @Test
+    public void testFileDownload() throws Exception {
+
+        SpringMvcApiReader springMvcApiReader = new SpringMvcApiReader(null, log);
+        Swagger swagger = springMvcApiReader.read(new HashSet<>(singletonList(FileController.class)));
+
+        Path path = swagger.getPaths().get("/v1/files/download/{entityId}");
+
+        Response response = path.getGet().getResponses().get("200");
+        Assert.assertEquals(response.getSchema().getType(), "file");
+    }
+
     @RestController
     @RequestMapping("/api")
     static class ExampleController {
@@ -100,6 +113,12 @@ public class SpringMvcApiReaderTest {
                 @RequestPart("file") MultipartFile file) throws IOException {
 
             return new ResponseEntity<>(new UploadFileResponseMessage(), HttpStatus.CREATED);
+        }
+
+        @GetMapping(value = "/download/{entityId}")
+        public byte[] downloadFile(@PathVariable String entityId) {
+
+            return new byte[1024];
         }
     }
 

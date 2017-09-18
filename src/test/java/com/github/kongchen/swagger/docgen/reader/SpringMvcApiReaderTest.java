@@ -3,14 +3,18 @@ package com.github.kongchen.swagger.docgen.reader;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
+import io.swagger.models.parameters.Parameter;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -46,6 +50,23 @@ public class SpringMvcApiReaderTest {
         Assert.assertEquals(path.getGet().getOperationId(), "nicknamed");
     }
 
+    /**
+     * see https://swagger.io/docs/specification/2-0/file-upload/
+     */
+    @Test
+    public void testFileUpload() throws Exception {
+
+
+        SpringMvcApiReader springMvcApiReader = new SpringMvcApiReader(null, log);
+        Swagger swagger = springMvcApiReader.read(new HashSet<>(singletonList(FileController.class)));
+
+        Path path = swagger.getPaths().get("/v1/files/upload/{entityId}");
+
+        Parameter parameter = path.getPost().getParameters().get(1);
+
+        Assert.assertEquals(parameter.getIn(), "formData");
+        Assert.assertEquals(parameter.getName(), "file");
+    }
 
     @RestController
     @RequestMapping("/api")
@@ -68,4 +89,21 @@ public class SpringMvcApiReaderTest {
         }
     }
 
+
+    @RestController
+    @RequestMapping("/v1/files")
+    static class FileController {
+
+        @RequestMapping(value = "/upload/{entityId}", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = {"application/x-protobuf", "application/json"})
+        public ResponseEntity<UploadFileResponseMessage> uploadFile(
+                @PathVariable String entityId,
+                @RequestPart("file") MultipartFile file) throws IOException {
+
+            return new ResponseEntity<>(new UploadFileResponseMessage(), HttpStatus.CREATED);
+        }
+    }
+
+    private static class UploadFileResponseMessage {
+
+    }
 }

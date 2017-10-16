@@ -40,6 +40,17 @@ public class SpringMvcApiReaderTest {
         Assert.assertEquals(paths.get("/api/someendpoint").getGet().getOperationId(), "someEndpoint");
     }
 
+    @Test
+    public void testReadWithoutLeadingSlash() throws Exception {
+
+        SpringMvcApiReader springMvcApiReader = new SpringMvcApiReader(null, log);
+        Swagger swagger = springMvcApiReader.read(new HashSet<>(singletonList(WithoutLeadingSlashController.class)));
+
+        Map<String, Path> paths = swagger.getPaths();
+
+        Assert.assertTrue(paths.keySet().contains("/api/someendpoint"));
+        Assert.assertEquals(paths.get("/api/someendpoint").getGet().getOperationId(), "someEndpoint");
+    }
 
     @Test
     public void testApiOperationNickname() throws Exception {
@@ -98,6 +109,16 @@ public class SpringMvcApiReaderTest {
         @GetMapping("endpoint-with-nickname")
         @ApiOperation(nickname = "nicknamed", value = "")
         public void endpointWithNickname() {
+
+        }
+    }
+
+    @RestController
+    @RequestMapping("api")
+    static class WithoutLeadingSlashController {
+
+        @GetMapping("someendpoint")
+        public void someEndpoint() {
 
         }
     }

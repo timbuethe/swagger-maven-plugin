@@ -36,7 +36,8 @@ public class SpringResource {
 
         String[] controllerRequestMappingValues = SpringUtils.getControllerResquestMapping(controllerClass);
 
-        this.controllerMapping = StringUtils.removeEnd(controllerRequestMappingValues[0], "/");
+        String controllerRequestMappingValue = controllerRequestMappingValues[0].startsWith("/") ? controllerRequestMappingValues[0] : "/" + controllerRequestMappingValues[0];
+        this.controllerMapping = StringUtils.removeEnd(controllerRequestMappingValue, "/");
     }
 
     public Class<?> getControllerClass() {

@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.timbuethe</groupId>
     <artifactId>swagger-maven-plugin</artifactId>
-    <version>3.1.5-custom-9</version>
+    <version>3.1.5-custom-11</version>
     <packaging>maven-plugin</packaging>
     <name>Swagger Maven Plugin</name>
     <description>

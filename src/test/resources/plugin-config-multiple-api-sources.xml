@@ -33,7 +33,9 @@
                             <outputPath>${basedir}/generated/document.html</outputPath>
                             <swaggerFileName>custom-file-name-one</swaggerFileName>
                             <outputFormats>json</outputFormats>
-                            <swaggerDirectory>${basedir}/generated/swagger-ui</swaggerDirectory>
+                            <swaggerDirectory>
+                                <swaggerDirectory>${basedir}/generated/swagger-ui</swaggerDirectory>
+                            </swaggerDirectory>
                             <swaggerApiReader>com.wordnik.jaxrs.VendorExtensionsJaxrsReader</swaggerApiReader>
                             <attachSwaggerArtifact>true</attachSwaggerArtifact>
                             <swaggerUIDocBasePath>http://www.example.com/restapi/doc</swaggerUIDocBasePath>

@@ -56,7 +56,11 @@
                             <templatePath>classpath:/templates/strapdown.html.hbs</templatePath>
                             <outputPath>${basedir}/generated/document-spring.html</outputPath>
                             <outputFormats>json</outputFormats>
-                            <swaggerDirectory>${basedir}/generated/swagger-ui-spring</swaggerDirectory>
+                            <swaggerDirectory>
+                                <swaggerDirectory>
+                                    ${basedir}/generated/swagger-ui-spring
+                                </swaggerDirectory>
+                            </swaggerDirectory>
                             <swaggerApiReader>com.wordnik.springmvc.VendorExtensionsSpringMvcReader</swaggerApiReader>
                             <swaggerUIDocBasePath>http://www.example.com/restapi/doc</swaggerUIDocBasePath>
                             <modelSubstitute>/override.map</modelSubstitute>

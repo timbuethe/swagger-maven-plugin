@@ -55,6 +55,8 @@ public class SpringSwaggerExtension extends AbstractSwaggerExtension {
         return parameters;
     }
 
+    // TODO use annotations here? @RequestBody and @ApiParam in array
+
     private Parameter extractParameterFromAnnotation(Annotation annotation, String defaultValue, Type type) {
         Parameter parameter = null;
 

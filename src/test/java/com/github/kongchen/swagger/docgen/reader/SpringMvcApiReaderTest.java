@@ -1,6 +1,9 @@
 package com.github.kongchen.swagger.docgen.reader;
 
+import com.wordnik.sample.model.User;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Response;
 import io.swagger.models.Swagger;
@@ -17,6 +20,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
@@ -81,6 +85,22 @@ public class SpringMvcApiReaderTest {
         Assert.assertEquals(response.getSchema().getType(), "file");
     }
 
+    @Test
+    public void testApiParam() throws Exception {
+
+        SpringMvcApiReader springMvcApiReader = new SpringMvcApiReader(null, log);
+        Swagger swagger = springMvcApiReader.read(new HashSet<>(singletonList(ExampleController.class)));
+
+        Operation operation = swagger.getPaths().get("/api/endpoint-with-api-param").getPost();
+        Assert.assertEquals(operation.getParameters().size(), 1);
+
+        Parameter parameter = operation.getParameters().get(0);
+        Assert.assertEquals(parameter.getIn(), "body");
+        Assert.assertEquals(parameter.getName(), "body");
+        Assert.assertEquals(parameter.getDescription(), "List of user object");
+    }
+
+
     @RestController
     @RequestMapping("/api")
     static class ExampleController {
@@ -98,6 +118,12 @@ public class SpringMvcApiReaderTest {
         @GetMapping("endpoint-with-nickname")
         @ApiOperation(nickname = "nicknamed", value = "")
         public void endpointWithNickname() {
+
+        }
+
+        @PostMapping("endpoint-with-api-param")
+        @SuppressWarnings("unused")
+        public void endpointWithApiParam(@ApiParam(value = "List of user object",required = true) @RequestBody List<User> users) {
 
         }
     }

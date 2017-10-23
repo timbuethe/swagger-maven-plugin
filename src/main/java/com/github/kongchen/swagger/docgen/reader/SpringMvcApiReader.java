@@ -308,8 +308,10 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
 
                     String parameterName = methodParameters[i].getName();
 
-                    LOG.debug("parameter name is empty, set name '" + parameterName + "' from java reflection (" + parameter + ")");
-                    parameter.setName(parameterName);
+                    if (!parameterName.matches("arg\\d+")) {
+                        LOG.debug("parameter name is empty, set name '" + parameterName + "' from java reflection (" + parameter + ")");
+                        parameter.setName(parameterName);
+                    }
                 }
 
                 operation.parameter(parameter);
@@ -327,7 +329,6 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
 
         return operation;
     }
-
 
 
     private Map<String, List<Method>> collectApisByRequestMapping(List<Method> methods) {
@@ -418,10 +419,10 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
                                 // comment out, to recognize methods that have a path set at a class level, but none on method level.
                                 // See com.github.kongchen.swagger.docgen.reader.SpringMvcApiReaderTest.testReadWithEmptyPathOnMethodLevel()
                                 //  if (!methodRequestMappingValue.isEmpty()) {
-                                    if (!resourceMap.containsKey(resourceKey)) {
-                                        resourceMap.put(resourceKey, new SpringResource(controllerClazz, methodRequestMappingValue, resourceKey, description));
-                                    }
-                                    resourceMap.get(resourceKey).addMethod(method);
+                                if (!resourceMap.containsKey(resourceKey)) {
+                                    resourceMap.put(resourceKey, new SpringResource(controllerClazz, methodRequestMappingValue, resourceKey, description));
+                                }
+                                resourceMap.get(resourceKey).addMethod(method);
                                 // }
                             }
                         }

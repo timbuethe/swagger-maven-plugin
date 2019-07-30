@@ -11,6 +11,7 @@ import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.FileProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
+import java.util.concurrent.atomic.AtomicReference;
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -274,7 +275,8 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
         } else {
             ResponseStatus responseStatus = AnnotatedElementUtils.findMergedAnnotation(method, ResponseStatus.class);
             if (responseStatus != null) {
-                operation.response(responseStatus.value().value(), new Response().description(responseStatus.reason()));
+                AtomicReference<Response> responseFound = getResponseFromResponseStatus(operation, responseStatus);
+                operation.response(responseStatus.value().value(), responseFound.get());
             }
         }
 
@@ -328,6 +330,16 @@ public class SpringMvcApiReader extends AbstractReader implements ClassSwaggerRe
         return operation;
     }
 
+
+    private AtomicReference<Response> getResponseFromResponseStatus(Operation operation, ResponseStatus responseStatus)
+    {
+        AtomicReference<Response> responseFound = new AtomicReference<>(new Response().description(responseStatus.reason()));
+        if (operation.getResponses() != null){
+            operation.getResponses()
+                .forEach((s, response) -> responseFound.set(response));
+        }
+        return responseFound;
+    }
 
 
     private Map<String, List<Method>> collectApisByRequestMapping(List<Method> methods) {
